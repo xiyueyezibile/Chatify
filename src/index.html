@@ -107,24 +107,28 @@
         const list = await d3.text("./list.csv");
         let chao = "";
         let rand = [];
-        const data = list.split("\n").map(function (item) {
-          let r = item.split(",").map((t, i) => {
-            if (i >= 1 && i <= 3) {
-              return t.slice(1, -1);
-            } else if (i > 3) {
-              return t.slice(1, -2);
+        const data = list
+          .split("\n")
+          .map(function (item) {
+            let r = item.split(",").map((t, i) => {
+              if (i >= 1 && i <= 3) {
+                return t.slice(1, -1);
+              } else if (i > 3) {
+                return t.slice(1, -2);
+              }
+              return t;
+            });
+            if (r[4] !== chao) {
+              chao = r[4];
+              rand = getRandomColor();
+            } else {
+              rand = getRandomColor(rand[1]);
             }
-            return t;
-          });
-          if (r[4] !== chao) {
-            chao = r[4];
-            rand = getRandomColor();
-          } else {
-            rand = getRandomColor(rand[1]);
-          }
-          r.push(rand[0]);
-          return r;
-        });
+            r.push(rand[0]);
+            return r;
+          })
+          .filter((t) => t[0]);
+
         data.shift();
 
         const container = document.getElementById("stage");
